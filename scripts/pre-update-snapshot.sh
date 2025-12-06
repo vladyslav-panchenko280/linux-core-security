@@ -1,6 +1,4 @@
 #!/bin/bash
-# Pre-Update Snapshot Script
-# Creates system snapshots before applying updates
 
 set -euo pipefail
 
