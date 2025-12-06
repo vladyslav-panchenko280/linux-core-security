@@ -1,0 +1,26 @@
+[Unit]
+Description=File Integrity Check Service (AIDE)
+Documentation=man:aide(1)
+After=local-fs.target
+ConditionPathExists=/var/lib/aide/aide.db
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/aide --check
+ExecStartPost=/opt/security/scripts/security-audit.sh
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=aide-check
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=true
+ReadOnlyPaths=/
+ReadWritePaths=/var/log/aide /var/log/security
+ProtectKernelTunables=true
+ProtectKernelModules=true
+
+[Install]
+WantedBy=multi-user.target

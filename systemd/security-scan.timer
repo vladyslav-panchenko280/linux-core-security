@@ -1,0 +1,12 @@
+[Unit]
+Description=Daily Security Scanning Timer
+Documentation=file:///opt/security/docs/security-scanning.md
+
+[Timer]
+OnCalendar=*-*-* 02:00:00
+RandomizedDelaySec=900
+Persistent=true
+Unit=security-scan.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,31 @@
+[Unit]
+Description=Security Scanning Service
+Documentation=file:///opt/security/docs/security-scanning.md
+After=network-online.target
+Wants=network-online.target
+ConditionPathExists=/opt/security/scripts/security-scan.sh
+
+[Service]
+Type=oneshot
+ExecStart=/opt/security/scripts/security-scan.sh
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=security-scan
+
+# Security hardening
+NoNewPrivileges=false
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=true
+ReadOnlyPaths=/
+ReadWritePaths=/var/log/security
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+
+# Resource limits
+MemoryMax=1G
+CPUQuota=75%
+
+[Install]
+WantedBy=multi-user.target
