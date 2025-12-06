@@ -1,0 +1,50 @@
+Unattended-Upgrade::Allowed-Origins {
+    "${distro_id}:${distro_codename}";
+    "${distro_id}:${distro_codename}-security";
+    "${distro_id}ESMApps:${distro_codename}-apps-security";
+    "${distro_id}ESM:${distro_codename}-infra-security";
+};
+
+// Packages to never update automatically
+Unattended-Upgrade::Package-Blacklist {
+    // "linux-image*";
+    // "linux-headers*";
+    // "linux-modules*";
+};
+
+// Split upgrade into smallest possible chunks
+Unattended-Upgrade::MinimalSteps "true";
+
+// Send email notifications
+Unattended-Upgrade::Mail "root";
+Unattended-Upgrade::MailReport "on-change";
+
+// Remove unused dependencies
+Unattended-Upgrade::Remove-Unused-Dependencies "true";
+Unattended-Upgrade::Remove-New-Unused-Dependencies "true";
+Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
+
+// Automatic reboot settings
+Unattended-Upgrade::Automatic-Reboot "false";
+Unattended-Upgrade::Automatic-Reboot-WithUsers "false";
+Unattended-Upgrade::Automatic-Reboot-Time "03:00";
+
+// Logging
+Unattended-Upgrade::SyslogEnable "true";
+Unattended-Upgrade::SyslogFacility "daemon";
+
+// Download and install upgrades
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Download-Upgradeable-Packages "1";
+APT::Periodic::AutocleanInterval "7";
+APT::Periodic::Unattended-Upgrade "1";
+
+// Only allow upgrades during specific hours
+// Unattended-Upgrade::OnlyOnACPower "true";
+
+// Bandwidth limit (KB/sec)
+Acquire::http::Dl-Limit "1000";
+
+// Enable verbose logging
+Unattended-Upgrade::Verbose "true";
+Unattended-Upgrade::Debug "false";

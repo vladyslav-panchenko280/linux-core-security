@@ -1,6 +1,3 @@
-# AppArmor profile for Docker secure container
-# Load with: apparmor_parser -r /etc/apparmor.d/docker-secure-container
-
 #include <tunables/global>
 
 profile docker-secure-container flags=(attach_disconnected,mediate_deleted) {

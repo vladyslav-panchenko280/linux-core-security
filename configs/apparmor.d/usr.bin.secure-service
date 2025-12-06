@@ -1,6 +1,3 @@
-# AppArmor profile for secure service
-# Place in /etc/apparmor.d/usr.bin.secure-service
-
 #include <tunables/global>
 
 profile secure-service /usr/bin/secure-service flags=(enforce) {
