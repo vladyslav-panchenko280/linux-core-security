@@ -69,7 +69,7 @@ sudo ./scripts/kernel-hardening.sh
 
 | Service | URL | Credentials |
 |---------|-----|-------------|
-| Grafana | http://localhost:3000 | admin / changeme |
+| Grafana | http://localhost:3000 | admin / admin123 |
 | Prometheus | http://localhost:9090 | - |
 | Trivy Server | http://localhost:8080 | - |
 
@@ -133,7 +133,7 @@ curl 'http://localhost:9090/api/v1/query?query=up'
 
 Grafana dashboards:
 1. Open http://localhost:3000
-2. Login with admin/changeme
+2. Login with admin/admin123
 3. Import dashboards from monitoring/grafana-dashboards/
 
 ## Documentation

@@ -86,7 +86,7 @@ services:
     networks:
       - security-net
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-changeme}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin123}
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_SECURITY_DISABLE_GRAVATAR=true
       - GF_SECURITY_COOKIE_SECURE=true
