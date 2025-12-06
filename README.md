@@ -97,21 +97,27 @@ docker-compose logs -f secure-linux
 
 ## Scanning Images with Trivy
 
-Scan a Docker image for vulnerabilities:
+Check Trivy server status:
 ```bash
-# Using Trivy server API
-curl -X POST http://localhost:8080/api/v1/image \
-  -H "Content-Type: application/json" \
-  -d '{"image": "ubuntu:24.04"}'
+curl http://localhost:8080/healthz
+curl http://localhost:8080/version
+```
 
-# Or run Trivy directly
-docker run --rm aquasec/trivy image ubuntu:24.04
+Scan a Docker image using Trivy CLI with server:
+```bash
+docker run --rm --network linux-core-security_security-net \
+  aquasec/trivy image --server http://trivy:8080 ubuntu:24.04
 ```
 
 Scan the secure-linux image:
 ```bash
 docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
   aquasec/trivy image linux-core-security-secure-linux:latest
+```
+
+Quick standalone scan:
+```bash
+docker run --rm aquasec/trivy image alpine:latest
 ```
 
 ## Monitoring and Alerts
