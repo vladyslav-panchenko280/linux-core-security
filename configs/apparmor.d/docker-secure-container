@@ -1,0 +1,105 @@
+# AppArmor profile for Docker secure container
+# Load with: apparmor_parser -r /etc/apparmor.d/docker-secure-container
+
+#include <tunables/global>
+
+profile docker-secure-container flags=(attach_disconnected,mediate_deleted) {
+  #include <abstractions/base>
+  #include <abstractions/nameservice>
+
+  # Deny write access to root filesystem
+  deny / w,
+  deny /boot/** wl,
+  deny /etc/** wl,
+  deny /lib/** wl,
+  deny /lib64/** wl,
+  deny /sbin/** wl,
+  deny /usr/** wl,
+
+  # Allow read access to system files
+  /etc/** r,
+  /lib/** r,
+  /lib64/** r,
+  /usr/** r,
+  /bin/** rix,
+  /sbin/** rix,
+  /usr/bin/** rix,
+  /usr/sbin/** rix,
+
+  # Allow read-write to specific directories
+  /home/** rw,
+  /tmp/** rw,
+  /var/tmp/** rw,
+  /var/log/** rw,
+  /var/lib/** rw,
+  /run/** rw,
+
+  # Deny access to sensitive files
+  deny /etc/shadow r,
+  deny /etc/gshadow r,
+  deny /etc/sudoers r,
+  deny /etc/sudoers.d/** r,
+
+  # Deny access to sensitive kernel interfaces
+  deny /proc/kcore rw,
+  deny /proc/kmem rw,
+  deny /proc/mem rw,
+  deny /sys/firmware/** rw,
+  deny /sys/kernel/security/** rw,
+
+  # Allow read access to proc
+  /proc/** r,
+  /proc/sys/** r,
+
+  # Allow read access to sys
+  /sys/** r,
+
+  # Deny mount operations
+  deny mount,
+  deny umount,
+  deny pivot_root,
+
+  # Deny module loading
+  deny /sbin/insmod x,
+  deny /sbin/modprobe x,
+  deny /sbin/rmmod x,
+
+  # Deny raw socket access
+  deny network raw,
+  deny network packet,
+
+  # Allow standard network access
+  network inet stream,
+  network inet dgram,
+  network inet6 stream,
+  network inet6 dgram,
+  network unix stream,
+  network unix dgram,
+
+  # Deny ptrace except for self
+  deny ptrace (read, trace) peer=*,
+  ptrace (read, trace) peer=@{profile_name},
+
+  # Allow signals
+  signal (send, receive),
+
+  # Capability restrictions
+  capability chown,
+  capability dac_override,
+  capability fowner,
+  capability fsetid,
+  capability kill,
+  capability setgid,
+  capability setuid,
+  capability net_bind_service,
+  capability sys_chroot,
+
+  # Deny dangerous capabilities
+  deny capability sys_admin,
+  deny capability sys_module,
+  deny capability sys_rawio,
+  deny capability sys_ptrace,
+  deny capability sys_boot,
+  deny capability mac_admin,
+  deny capability mac_override,
+}

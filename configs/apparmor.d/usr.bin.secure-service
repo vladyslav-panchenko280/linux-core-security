@@ -1,0 +1,61 @@
+# AppArmor profile for secure service
+# Place in /etc/apparmor.d/usr.bin.secure-service
+
+#include <tunables/global>
+
+profile secure-service /usr/bin/secure-service flags=(enforce) {
+  #include <abstractions/base>
+  #include <abstractions/nameservice>
+
+  # Deny all network access by default
+  deny network,
+
+  # Allow specific network access if needed
+  # network inet stream,
+  # network inet dgram,
+
+  # Deny all file access by default, allow specific paths
+  deny /** rwklx,
+
+  # Allow read access to system libraries
+  /lib/** r,
+  /lib64/** r,
+  /usr/lib/** r,
+  /usr/lib64/** r,
+
+  # Allow read access to configuration
+  /etc/secure-service/** r,
+  /etc/ssl/certs/** r,
+  /etc/ca-certificates/** r,
+
+  # Allow read-write to specific data directory
+  /var/lib/secure-service/** rw,
+  /var/log/secure-service/** w,
+
+  # Allow execution of self
+  /usr/bin/secure-service mr,
+
+  # Allow reading /proc for self only
+  owner /proc/@{pid}/** r,
+  /proc/sys/kernel/random/uuid r,
+
+  # Deny dangerous operations
+  deny /proc/*/mem rw,
+  deny /proc/kcore rw,
+  deny /sys/kernel/** rw,
+
+  # Deny ptrace
+  deny ptrace,
+
+  # Deny mount operations
+  deny mount,
+  deny umount,
+  deny pivot_root,
+
+  # Deny raw socket access
+  deny network raw,
+  deny network packet,
+
+  # Allow signals to self only
+  signal (send, receive) peer=@{profile_name},
+}
