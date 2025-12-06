@@ -1,0 +1,121 @@
+groups:
+  - name: security-alerts
+    rules:
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High CPU usage detected
+          description: CPU usage is above 80% for more than 5 minutes
+
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High memory usage detected
+          description: Memory usage is above 85%
+
+      - alert: DiskSpaceLow
+        expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) * 100 < 15
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Low disk space
+          description: Disk space is below 15%
+
+      - alert: UnauthorizedSSHAttempts
+        expr: increase(node_systemd_unit_state{name="sshd.service",state="failed"}[5m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: SSH service failure detected
+          description: SSH service has failed
+
+      - alert: FileIntegrityViolation
+        expr: aide_integrity_check_failed > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: File integrity violation
+          description: AIDE detected unauthorized file changes
+
+      - alert: AuditdNotRunning
+        expr: node_systemd_unit_state{name="auditd.service",state="active"} != 1
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Auditd service not running
+          description: Audit daemon is not active
+
+      - alert: KernelParameterChanged
+        expr: changes(node_sysctl_info[1h]) > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: Kernel parameter changed
+          description: A kernel parameter was modified
+
+      - alert: NewNetworkConnection
+        expr: increase(node_netstat_Tcp_CurrEstab[5m]) > 10
+        for: 5m
+        labels:
+          severity: info
+        annotations:
+          summary: Many new network connections
+          description: Unusual increase in network connections
+
+      - alert: SuspiciousProcessExecution
+        expr: increase(node_processes_pids[1m]) > 50
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: Unusual process spawning
+          description: Many new processes created in short time
+
+      - alert: RootLoginDetected
+        expr: node_login_sessions{user="root"} > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: Root login detected
+          description: Direct root login was detected
+
+  - name: container-security-alerts
+    rules:
+      - alert: ContainerKilled
+        expr: time() - container_last_seen > 60
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: Container was killed
+          description: A container was terminated unexpectedly
+
+      - alert: ContainerHighCPU
+        expr: rate(container_cpu_usage_seconds_total[5m]) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Container high CPU usage
+          description: Container CPU usage is above 80%
+
+      - alert: ContainerHighMemory
+        expr: container_memory_usage_bytes / container_spec_memory_limit_bytes * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Container high memory usage
+          description: Container memory usage is above 85%
