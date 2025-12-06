@@ -65,6 +65,71 @@ sudo ./scripts/kernel-hardening.sh
 | security-scan.timer | Daily 02:00 | Vulnerability scan |
 | integrity-check.timer | Daily 04:00 | File integrity check |
 
+## Web Interfaces
+
+| Service | URL | Credentials |
+|---------|-----|-------------|
+| Grafana | http://localhost:3000 | admin / changeme |
+| Prometheus | http://localhost:9090 | - |
+| Trivy Server | http://localhost:8080 | - |
+
+## Working with Containers
+
+Access the secure Linux container:
+```bash
+docker exec -it secure-linux bash
+```
+
+Run security audit inside container:
+```bash
+docker exec secure-linux sudo /opt/security/scripts/security-audit.sh
+```
+
+Check kernel hardening status:
+```bash
+docker exec secure-linux sudo /opt/security/scripts/kernel-hardening.sh verify
+```
+
+View container logs:
+```bash
+docker-compose logs -f secure-linux
+```
+
+## Scanning Images with Trivy
+
+Scan a Docker image for vulnerabilities:
+```bash
+# Using Trivy server API
+curl -X POST http://localhost:8080/api/v1/image \
+  -H "Content-Type: application/json" \
+  -d '{"image": "ubuntu:24.04"}'
+
+# Or run Trivy directly
+docker run --rm aquasec/trivy image ubuntu:24.04
+```
+
+Scan the secure-linux image:
+```bash
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+  aquasec/trivy image linux-core-security-secure-linux:latest
+```
+
+## Monitoring and Alerts
+
+View Prometheus metrics:
+```bash
+# Check targets status
+curl http://localhost:9090/api/v1/targets
+
+# Query specific metric
+curl 'http://localhost:9090/api/v1/query?query=up'
+```
+
+Grafana dashboards:
+1. Open http://localhost:3000
+2. Login with admin/changeme
+3. Import dashboards from monitoring/grafana-dashboards/
+
 ## Documentation
 
 - [SECURITY.md](SECURITY.md) - Security policies
