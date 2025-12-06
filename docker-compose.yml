@@ -15,7 +15,6 @@ services:
     cap_drop:
       - ALL
     security_opt:
-      - no-new-privileges:true
       - apparmor:docker-default
     read_only: false
     tmpfs:

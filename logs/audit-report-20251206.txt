@@ -1,0 +1,31 @@
+Security Audit Report
+Generated: Sat Dec  6 21:20:00 UTC 2025
+Hostname: secure-linux
+Kernel: 6.10.14-linuxkit
+========================================
+
+=== Kernel Security Settings ===
+
+[[0;32mPASS[0m] ASLR fully enabled (randomize_va_space=2)
+[[0;31mFAIL[0m] Kernel pointers exposed (kptr_restrict=0)
+[[0;32mPASS[0m] Dmesg access restricted
+[[0;31mFAIL[0m] Ptrace unrestricted
+[[1;33mWARN[0m] SysRq enabled (value=1)
+[[1;33mWARN[0m] Core dumps enabled
+[[0;32mPASS[0m] SUID core dumps disabled
+
+=== Network Security Settings ===
+
+[[1;33mWARN[0m] IPv4 forwarding enabled
+[[0;32mPASS[0m] SYN cookies enabled
+[[0;32mPASS[0m] ICMP redirects disabled
+[[0;32mPASS[0m] Source routing disabled
+[[0;31mFAIL[0m] Reverse path filtering disabled
+[[1;33mWARN[0m] Martian packets not logged
+
+=== Filesystem Security ===
+
+[[0;32mPASS[0m] Symlink protection enabled
+[[0;32mPASS[0m] Hardlink protection enabled
+[[0;32mPASS[0m] /tmp mounted with noexec
+[[0;32mPASS[0m] /tmp mounted with nosuid

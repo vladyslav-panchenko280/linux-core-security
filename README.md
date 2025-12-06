@@ -82,12 +82,12 @@ docker exec -it secure-linux bash
 
 Run security audit inside container:
 ```bash
-docker exec secure-linux sudo /opt/security/scripts/security-audit.sh
+docker exec -u root secure-linux /opt/security/scripts/security-audit.sh
 ```
 
 Check kernel hardening status:
 ```bash
-docker exec secure-linux sudo /opt/security/scripts/kernel-hardening.sh verify
+docker exec -u root secure-linux /opt/security/scripts/kernel-hardening.sh verify
 ```
 
 View container logs:

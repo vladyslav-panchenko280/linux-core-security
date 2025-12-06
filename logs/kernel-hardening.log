@@ -1,0 +1,19 @@
+[2025-12-06 21:20:01] Starting kernel hardening process...
+[2025-12-06 21:20:01] === Kernel Hardening Report ===
+[2025-12-06 21:20:01] Verifying ASLR status...
+[2025-12-06 21:20:01]   OK: ASLR is fully enabled
+[2025-12-06 21:20:01] Verifying memory protection settings...
+[2025-12-06 21:20:01]   WARNING: Kernel pointer restriction is disabled (kernel.kptr_restrict=0)
+[2025-12-06 21:20:01]   OK: Dmesg restriction is enabled (kernel.dmesg_restrict=1)
+[2025-12-06 21:20:01]   INFO: kernel.yama.ptrace_scope not available
+[2025-12-06 21:20:01]   OK: Symlink protection is enabled (fs.protected_symlinks=1)
+[2025-12-06 21:20:01]   OK: Hardlink protection is enabled (fs.protected_hardlinks=1)
+[2025-12-06 21:20:01] Verifying network security settings...
+[2025-12-06 21:20:01]   SYN cookies: net.ipv4.tcp_syncookies=1
+[2025-12-06 21:20:01]   Reverse path filtering: net.ipv4.conf.all.rp_filter=0
+[2025-12-06 21:20:01]   ICMP redirects (should be 0): net.ipv4.conf.all.accept_redirects=0
+[2025-12-06 21:20:01]   ICMP broadcast ignore: net.ipv4.icmp_echo_ignore_broadcasts=1
+[2025-12-06 21:20:01] Checking Secure Boot status...
+[2025-12-06 21:20:01]   INFO: System is not using UEFI
+[2025-12-06 21:20:01] === End of Report ===
+[2025-12-06 21:20:01] Kernel hardening complete
