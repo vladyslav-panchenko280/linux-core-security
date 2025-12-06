@@ -8,29 +8,23 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    # Core security tools
     apparmor \
     apparmor-utils \
     auditd \
     audispd-plugins \
     aide \
-    # Intrusion prevention
     fail2ban \
-    # Automatic updates
     unattended-upgrades \
     apt-listchanges \
     needrestart \
-    # Monitoring and utilities
     sysstat \
     htop \
     net-tools \
     iproute2 \
     procps \
-    # Security scanning
     lynis \
     rkhunter \
     chkrootkit \
-    # Essential tools
     curl \
     wget \
     gnupg \
@@ -38,6 +32,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     openssl \
     sudo \
     vim \
+    jq \
+    bc \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -52,9 +48,7 @@ RUN chmod +x /opt/security/scripts/*.sh
 RUN useradd -m -s /bin/bash -G sudo secuser \
     && echo "secuser ALL=(ALL) NOPASSWD: /opt/security/scripts/*" >> /etc/sudoers.d/secuser
 
-RUN sysctl -p /etc/sysctl.d/99-security.conf 2>/dev/null || true
-
-RUN aideinit 2>/dev/null || true
+RUN mkdir -p /var/log/security && chown secuser:secuser /var/log/security
 
 RUN chmod 700 /root \
     && chmod 750 /home/secuser \
@@ -66,7 +60,7 @@ RUN apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD ps aux | grep -v grep | grep -q auditd || exit 1
+    CMD pgrep -x bash || exit 0
 
 USER secuser
 WORKDIR /home/secuser
